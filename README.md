@@ -11,7 +11,18 @@ We decided to create a cluster with the five VMs we had at disposition. They are
 
 In particular, we set the last one as the master node, and the others as pure workers.
 
+## Cluster connection
 
-### SSH tunneling
+Once a master is deployed in the master VM with  ```./start-master.sh ```, its Web-UI can be accessed at localhost:8080 via double SSH port forwarding using the following command
 
-```ssh -t -L 8080:localhost:61521 tfaorlin@gate.cloudveneto.it ssh -L 61521:localhost:8080 root@10.67.22.100 ```
+```ssh -t -L 8080:localhost:61521 tfaorlin@gate.cloudveneto.it ssh -L 61521:localhost:8080 root@10.67.22.100```
+
+To interact with the cluster and work at the project we also forward to our local machine a Jupyter notebook hosted at port 8888 in the master VM
+
+ ```ssh -t -L 8888:localhost:8888  tfaorlin@gate.cloudveneto.it ssh -L 8888:localhost:8888 root@10.67.22.100```
+
+ ```jupyter notebook --port 8888 --no-browser --allow-root```
+
+In the end, we visit all the nodes and start all the workers with
+
+ ```./start-worker.sh spark://10.67.22.100:7077 ```
