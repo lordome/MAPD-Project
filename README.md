@@ -38,5 +38,6 @@ In the end, we visit all the nodes and start all the workers with
   
   To create the two topics type 
   
-  ```bin/kafka-topics.sh --create --topic topic_stream --bootstrap-server localhost:9092```
-  ```bin/kafka-topics.sh --create --topic topic_results --bootstrap-server localhost:9092```
+  ```/home/packages/kafka_2.13-2.7.0/bin/kafka-topics.sh --create --topic topic_stream --bootstrap-server localhost:9092```
+  ```/home/packages/kafka_2.13-2.7.0/bin/kafka-topics.sh --create --topic topic_results --bootstrap-server localhost:9092```
+  ```/home/packages/kafka_2.13-2.7.0/bin/kafka-topics.sh --list --bootstrap-server localhost:9092```
