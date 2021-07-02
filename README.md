@@ -29,3 +29,9 @@ To interact with the cluster and work at the project we also forward to our loca
 In the end, we visit all the nodes and start all the workers with
 
  ```/home/packages/spark-3.1.2-bin-hadoop3.2/sbin/start-worker.sh spark://10.67.22.100:7077```
+ 
+ To start the Kafka server type in order
+ 
+ ```/home/packages/kafka_2.13-2.7.0/bin/zookeeper-server-start.sh /home/packages/kafka_2.13-2.7.0/config/zookeeper.properties```
+ 
+  ```/home/packages/kafka_2.13-2.7.0/bin/kafka-server-start.sh /home/packages/kafka_2.13-2.7.0/config/server.properties ```
