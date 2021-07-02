@@ -4,10 +4,13 @@
 We decided to create a cluster with the five VMs we had at disposition. They are the following:
 
 * MAPD-B_Gr09-5 10.67.22.226
-* MAPD-B_Gr09-4 10.67.22.68
+
+* MAPD-B_Gr09-4 10.67.22.68
 * MAPD-B_Gr09-3 10.67.22.63
-* MAPD-B_Gr09-2 10.67.22.88
-* MAPD-B_Gr09-1 10.67.22.100
+
+* MAPD-B_Gr09-2 10.67.22.88
+
+* MAPD-B_Gr09-1 10.67.22.100
 
 In particular, we set the last one as the master node, and the others as pure workers.
 
@@ -25,4 +28,16 @@ To interact with the cluster and work at the project we also forward to our loca
 
 In the end, we visit all the nodes and start all the workers with
 
- ```./start-worker.sh spark://10.67.22.100:7077 ```
+ ```/home/packages/spark-3.1.2-bin-hadoop3.2/sbin/start-worker.sh spark://10.67.22.100:7077```
+ 
+ To start the Kafka server type in order
+ 
+ ```/home/packages/kafka_2.13-2.7.0/bin/zookeeper-server-start.sh /home/packages/kafka_2.13-2.7.0/config/zookeeper.properties```
+ 
+  ```/home/packages/kafka_2.13-2.7.0/bin/kafka-server-start.sh /home/packages/kafka_2.13-2.7.0/config/server.properties ```
+  
+  To create the two topics type 
+  
+  ```/home/packages/kafka_2.13-2.7.0/bin/kafka-topics.sh --create --topic topic_stream --bootstrap-server localhost:9092```
+  ```/home/packages/kafka_2.13-2.7.0/bin/kafka-topics.sh --create --topic topic_results --bootstrap-server localhost:9092```
+  ```/home/packages/kafka_2.13-2.7.0/bin/kafka-topics.sh --list --bootstrap-server localhost:9092```
