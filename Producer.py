@@ -1,10 +1,12 @@
-from kafka.admin import KafkaAdminClient, NewTopic
+from kafka.admin import KafkaAdminClient
+from kafka import KafkaProducer
+
 import os
 import ssl
 import json
 import time
 import pandas as pd
-from kafka import KafkaProducer
+
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -24,5 +26,5 @@ for i in range(0, 81):
         for key in ['HEAD', 'FPGA', "TDC_CHANNEL", "ORBIT_CNT", "BX_COUNTER"]:
             jj[key] = int(jj[key])
         producer.send('topic_stream', json.dumps(jj).encode('utf-8'))
-        time.sleep(0.0004)
+        time.sleep(0.01)
     producer.flush()
