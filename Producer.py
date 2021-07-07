@@ -6,7 +6,7 @@ import ssl
 import json
 import time
 import pandas as pd
-
+from tqdm import tqdm
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -22,10 +22,11 @@ for i in range(0, 81):
     url = f"https://cloud-areapd.pd.infn.it:5210/swift/v1/AUTH_d2e941ce4b324467b6b3d467a923a9bc/MAPD_miniDT_stream/data_0000{i}.txt"
     df = pd.read_csv(url)
     df = df[df.ORBIT_CNT < 5e8]
-    for j in range(0, df.shape[0]):
+    print(f"Reading file data_0000{i}.txt")
+    for j in tqdm(range(0, df.shape[0])):
         jj = df.iloc[j].to_dict()
         for key in ['HEAD', 'FPGA', "TDC_CHANNEL", "ORBIT_CNT", "BX_COUNTER"]:
             jj[key] = int(jj[key])
         producer.send('topic_stream', json.dumps(jj).encode('utf-8'))
-        time.sleep(0.01)
+        time.sleep(0.0003)
     producer.flush()
