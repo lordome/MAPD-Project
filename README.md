@@ -14,7 +14,7 @@ We decided to create a cluster with the five VMs we had at disposition. They are
 
 In particular, we set the last one as the master node, and the others as pure workers.
 
-## Cluster connection
+## Cluster connection - Spark
 
 Once a master is deployed in the master VM with  ```./start-master.sh ```, its Web-UI can be accessed at localhost:8080 via double SSH port forwarding using the following command
 
