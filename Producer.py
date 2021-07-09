@@ -12,7 +12,7 @@ from tqdm import tqdm
 ssl._create_default_https_context = ssl._create_unverified_context
 
 #define the kafka server from IP and Port
-KAFKA_BOOTSTRAP_SERVERS = '10.67.22.226:9092'
+KAFKA_BOOTSTRAP_SERVERS = 'slave04:9092'
 kafka_admin = KafkaAdminClient(
     bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
 )
