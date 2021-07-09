@@ -16,4 +16,4 @@ In particular, we set the last one as the master node, and the others as pure wo
 
 ## Start Spark cluster - Spark
 
-Once you arrive on MAPD-B_Gr09-1 (master) type 
+Once you arrive on MAPD-B_Gr09-1 (master) type `cd ../home/MAPD_project` and `./start-all.sh` to start either the Kafka Zookeper, Server and all Spark cluster infrastructure.
