@@ -65,10 +65,10 @@ if( window.location.search.match( /print-pdf/gi ) ) {
     <!-- End of mathjax configuration -->
 
 <style type="text/css">
-    pre { line-height: 125%; margin: 0; }
-td.linenos pre { color: #000000; background-color: #f0f0f0; padding-left: 5px; padding-right: 5px; }
-span.linenos { color: #000000; background-color: #f0f0f0; padding-left: 5px; padding-right: 5px; }
-td.linenos pre.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+    pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 .highlight .hll { background-color: var(--jp-cell-editor-active-background) }
 .highlight { background: var(--jp-cell-editor-background); color: var(--jp-mirror-editor-variable-color) }
@@ -14418,7 +14418,7 @@ spark.executor.cores               1</code></pre>
 <br><br></p>
 
 </div>
-</div>
+</div></div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p><br><br>
@@ -14431,9 +14431,33 @@ spark.executor.cores               1</code></pre>
 <p>The Spark Session</p>
 
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+</div><div class="fragment"><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#initialisation of spark from the packages folder</span>
+<span class="n">findspark</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="s1">&#39;/usr/local/spark&#39;</span><span class="p">)</span>
 
-</div></section></section><section><section>
+<span class="c1">#start session - specify port, application name, and configuration settings</span>
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span>\
+    <span class="o">.</span><span class="n">master</span><span class="p">(</span><span class="s2">&quot;spark://master:7077&quot;</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;MAPD Final Project session&quot;</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.jars.packages&quot;</span><span class="p">,</span><span class="s2">&quot;org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2&quot;</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+
+<span class="c1">#default parallelism setting to shuffle different partitions between workers</span>
+<span class="c1">#after join or groupBy operations</span>
+<span class="n">spark</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;spark.sql.shuffle.partitions&quot;</span><span class="p">,</span> <span class="n">spark</span><span class="o">.</span><span class="n">sparkContext</span><span class="o">.</span><span class="n">defaultParallelism</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div></div></section></section><section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="Kafka-server-setup">Kafka server setup<a class="anchor-link" href="#Kafka-server-setup">&#182;</a></h2>
@@ -14449,7 +14473,7 @@ spark.executor.cores               1</code></pre>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="One-script-to-rule-them-all">One script to rule them all<a class="anchor-link" href="#One-script-to-rule-them-all">&#182;</a></h2>
 </div>
-</div>
+</div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>The cluster is created using a single script: <code>/usr/local/spark/sbin/start-all.sh</code> after exchanging ssh keys between master and slaves and setting up spark configuration.</p>
@@ -14461,14 +14485,63 @@ spark.executor.cores               1</code></pre>
 <p><code>ssh slave04 sh /home/packages/kafka_2.13-2.7.0/bin/kafka-server-start.sh /home/packages/kafka_2.13-2.7.0/config/server.properties &amp;%</code></p>
 
 </div>
-</div></section></section><section><section>
+</div></div></section></section><section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h1 id="Producer">Producer<a class="anchor-link" href="#Producer">&#182;</a></h1>
 </div>
-</div></section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+</div></section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#SSL context to dowload without errors data from the given server</span>
+<span class="n">ssl</span><span class="o">.</span><span class="n">_create_default_https_context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">_create_unverified_context</span>
 
+<span class="c1">#define the kafka server from IP and Port</span>
+<span class="n">KAFKA_BOOTSTRAP_SERVERS</span> <span class="o">=</span> <span class="s1">&#39;slave04:9092&#39;</span>
+
+<span class="c1">#producer definition from IP address given before</span>
+<span class="n">producer</span> <span class="o">=</span> <span class="n">KafkaProducer</span><span class="p">(</span><span class="n">bootstrap_servers</span><span class="o">=</span><span class="n">KAFKA_BOOTSTRAP_SERVERS</span><span class="p">)</span>
+
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">81</span><span class="p">):</span>
+    <span class="c1">#data download from s3 bucket</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://cloud-areapd.pd.infn.it:5210/swift/v1/</span><span class="se">\</span>
+<span class="s2">            AUTH_d2e941ce4b324467b6b3d467a923a9bc/MAPD_miniDT_stream/data_0000</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.txt&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    
+    <span class="c1">#data cleaning for possible outliers</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">ORBIT_CNT</span> <span class="o">&lt;</span> <span class="mf">5e8</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reading file data_0000</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.txt&quot;</span><span class="p">)</span>
+    
+    <span class="c1">#for loop over file size</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+        
+        <span class="c1">#dictionaries creation from dataframe&#39;s rows</span>
+        <span class="n">jj</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        
+        <span class="c1">#unnecessary floats are cast into ints</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;HEAD&#39;</span><span class="p">,</span> <span class="s1">&#39;FPGA&#39;</span><span class="p">,</span> <span class="s2">&quot;TDC_CHANNEL&quot;</span><span class="p">]:</span>
+            <span class="n">jj</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">jj</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+            
+        <span class="c1">#json row is sent to the Kafka topic &#39;topic_stream&#39;</span>
+        <span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s1">&#39;topic_stream&#39;</span><span class="p">,</span>
+                      <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">jj</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+                     <span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.0003</span><span class="p">)</span>
+        
+    <span class="n">producer</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+
+     </div>
 </div>
+</div>
+</div>
+
+</div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p><br><br>
@@ -14476,26 +14549,290 @@ spark.executor.cores               1</code></pre>
 <br><br></p>
 
 </div>
-</div></section></section><section><section>
+</div></div></section></section><section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h1 id="Computation">Computation<a class="anchor-link" href="#Computation">&#182;</a></h1>
 </div>
-</div></section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+</div></section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#define the kafka server from IP and Port</span>
+<span class="n">KAFKA_BOOTSTRAP_SERVERS</span> <span class="o">=</span> <span class="s2">&quot;slave04:9092&quot;</span> <span class="c1">#on the fourth VM </span>
 
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+<span class="c1">#define the input dataframe and its source. Define subscription to &#39;topic_stream&#39;</span>
+<span class="n">inputDF</span> <span class="o">=</span> <span class="n">spark</span>\
+        <span class="o">.</span><span class="n">readStream</span>\
+        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;kafka&quot;</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;kafka.bootstrap.servers&quot;</span><span class="p">,</span> <span class="n">KAFKA_BOOTSTRAP_SERVERS</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;subscribe&#39;</span><span class="p">,</span> <span class="s1">&#39;topic_stream&#39;</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</pre></div>
 
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
-
-</div></section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
-
-</div></section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
-
+     </div>
 </div>
+</div>
+</div>
+
+</div><div class="fragment"><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#define the schema of the rows that will be read</span>
+<span class="c1">#double are used to overcome overflow issues</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;HEAD&quot;</span><span class="p">,</span>        <span class="n">IntegerType</span><span class="p">()),</span>
+         <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;FPGA&quot;</span><span class="p">,</span>         <span class="n">IntegerType</span><span class="p">()),</span>
+         <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;TDC_CHANNEL&quot;</span><span class="p">,</span>  <span class="n">IntegerType</span><span class="p">()),</span>
+         <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;ORBIT_CNT&quot;</span><span class="p">,</span>    <span class="n">DoubleType</span><span class="p">()),</span>
+         <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;BX_COUNTER&quot;</span><span class="p">,</span>   <span class="n">DoubleType</span><span class="p">()),</span> 
+         <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;TDC_MEAS&quot;</span><span class="p">,</span>    <span class="n">DoubleType</span><span class="p">()</span> <span class="p">)]</span>
+<span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div></div><div class="fragment"><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#convert input_Df to json by casting columns into the predefined schema.</span>
+<span class="n">jsonDF</span> <span class="o">=</span> <span class="n">inputDF</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">from_json</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">),</span>
+                                  <span class="n">schema</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div></div><div class="fragment"><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#flattening the dataframe</span>
+<span class="n">flatDF</span> <span class="o">=</span> <span class="n">jsonDF</span><span class="o">.</span><span class="n">selectExpr</span><span class="p">(</span><span class="s2">&quot;value.HEAD&quot;</span><span class="p">,</span> 
+                           <span class="s2">&quot;value.FPGA&quot;</span><span class="p">,</span> 
+                           <span class="s2">&quot;value.TDC_CHANNEL&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;value.ORBIT_CNT&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;value.BX_COUNTER&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;value.TDC_MEAS&quot;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div></div></section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#clean dataframe, removing ancillary hits</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">flatDF</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;HEAD&quot;</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="fragment"><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#scintillator time offset by Chamber</span>
+<span class="n">time_offset_by_chamber</span> <span class="o">=</span> <span class="p">{</span>
+<span class="mi">0</span><span class="p">:</span> <span class="mf">95.0</span> <span class="o">-</span> <span class="mf">1.1</span><span class="p">,</span> <span class="c1"># Ch 0</span>
+<span class="mi">1</span><span class="p">:</span> <span class="mf">95.0</span> <span class="o">+</span> <span class="mf">6.4</span><span class="p">,</span> <span class="c1"># Ch 1</span>
+<span class="mi">2</span><span class="p">:</span> <span class="mf">95.0</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="c1"># Ch 2</span>
+<span class="mi">3</span><span class="p">:</span> <span class="mf">95.0</span> <span class="o">-</span> <span class="mf">2.6</span><span class="p">,</span> <span class="c1"># Ch 3</span>
+<span class="p">}</span>
+
+<span class="c1">#bins definition for histograms - they will be shared among all iterations.</span>
+<span class="n">binning</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">4e8</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+
+<span class="n">binning_drift</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">40</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div></div></section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">batch_proc</span><span class="p">(</span><span class="n">batch_df</span><span class="p">,</span> <span class="n">epoch_id</span><span class="p">):</span>
+    
+    <span class="c1">#repartition the df DataFrame to 100 parts</span>
+    <span class="c1">#and persist in cache to speedup calculations</span>
+    <span class="n">batch_df</span><span class="o">.</span><span class="n">coalesce</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+    <span class="n">batch_df</span><span class="o">.</span><span class="n">persist</span><span class="p">()</span>
+    
+    <span class="c1">#Dividing the dataframe between chambers</span>
+    <span class="n">batch_df_ch0</span> <span class="o">=</span> <span class="n">batch_df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;(FPGA==0) AND (TDC_CHANNEL &gt;= 0) AND (TDC_CHANNEL &lt; 64)&#39;</span><span class="p">)</span>
+    <span class="n">batch_df_ch1</span> <span class="o">=</span> <span class="n">batch_df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;(FPGA==0) AND (TDC_CHANNEL &gt;= 64) AND (TDC_CHANNEL &lt; 128)&#39;</span><span class="p">)</span>
+    <span class="n">batch_df_ch2</span> <span class="o">=</span> <span class="n">batch_df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;(FPGA==1) AND (TDC_CHANNEL &gt;= 0) AND (TDC_CHANNEL &lt; 64)&#39;</span><span class="p">)</span>
+    <span class="n">batch_df_ch3</span> <span class="o">=</span> <span class="n">batch_df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;(FPGA==1) AND (TDC_CHANNEL &gt;= 64) AND (TDC_CHANNEL &lt; 128)&#39;</span><span class="p">)</span>
+    
+    <span class="c1">#coalesce + persist for each filtered batch</span>
+    <span class="n">batch_df_ch0</span><span class="o">.</span><span class="n">coalesce</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+    <span class="n">batch_df_ch1</span><span class="o">.</span><span class="n">coalesce</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+    <span class="n">batch_df_ch2</span><span class="o">.</span><span class="n">coalesce</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+    <span class="n">batch_df_ch3</span><span class="o">.</span><span class="n">coalesce</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+    <span class="n">batch_df_ch0</span><span class="o">.</span><span class="n">persist</span><span class="p">()</span>
+    <span class="n">batch_df_ch1</span><span class="o">.</span><span class="n">persist</span><span class="p">()</span>
+    <span class="n">batch_df_ch2</span><span class="o">.</span><span class="n">persist</span><span class="p">()</span>
+    <span class="n">batch_df_ch3</span><span class="o">.</span><span class="n">persist</span><span class="p">()</span>    
+       
+    <span class="c1">#list of dfs_ handy for loops</span>
+    <span class="n">batch_dfs</span> <span class="o">=</span> <span class="p">[</span><span class="n">batch_df_ch0</span><span class="p">,</span> <span class="n">batch_df_ch1</span><span class="p">,</span> <span class="n">batch_df_ch2</span><span class="p">,</span> <span class="n">batch_df_ch3</span><span class="p">]</span>
+    
+    <span class="c1">#counting hits for each chamber</span>
+    <span class="n">hits_ch0</span> <span class="o">=</span> <span class="n">batch_df_ch0</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="n">hits_ch1</span> <span class="o">=</span> <span class="n">batch_df_ch1</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="n">hits_ch2</span> <span class="o">=</span> <span class="n">batch_df_ch2</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="n">hits_ch3</span> <span class="o">=</span> <span class="n">batch_df_ch3</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    
+    <span class="c1">#total number of hits as the sum of the previous 4 operations</span>
+    <span class="n">hits</span> <span class="o">=</span> <span class="n">hits_ch0</span> <span class="o">+</span> <span class="n">hits_ch1</span> <span class="o">+</span> <span class="n">hits_ch2</span> <span class="o">+</span> <span class="n">hits_ch3</span>
+    
+    <span class="k">if</span> <span class="n">hits</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span> 
+
+        <span class="c1">#dataframe containing only informations about scintillator events</span>
+        <span class="n">batch_df_scint</span> <span class="o">=</span> <span class="p">(</span><span class="n">batch_df</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="s1">&#39;(FPGA==1) AND (TDC_CHANNEL == 128)&#39;</span><span class="p">)</span>
+                          <span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;ORBIT_CNT&#39;</span><span class="p">,</span> <span class="s1">&#39;BX_COUNTER&#39;</span><span class="p">,</span><span class="s2">&quot;TDC_MEAS&quot;</span><span class="p">])</span>
+                          <span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s1">&#39;ORBIT_CNT&#39;</span><span class="p">)</span>
+                          <span class="o">.</span><span class="n">min</span><span class="p">()</span>
+                          <span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s2">&quot;min(BX_COUNTER)&quot;</span><span class="p">,</span> <span class="s1">&#39;BX_COUNTER_SCINT&#39;</span><span class="p">)</span>
+                          <span class="o">.</span><span class="n">withColumnRenamed</span><span class="p">(</span><span class="s2">&quot;min(TDC_MEAS)&quot;</span><span class="p">,</span> <span class="s1">&#39;TDC_MEAS_SCINT&#39;</span><span class="p">)</span>
+                          <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;min(ORBIT_CNT)&#39;</span><span class="p">)</span>
+                         <span class="p">)</span>
+
+        <span class="c1">#total active channels histogram</span>
+        <span class="n">hist1</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="c1">#channels per orbit histogram </span>
+        <span class="n">hist2</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1">#active channels in orbits in which the scintillator is active histogram</span>
+        <span class="n">hist3</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1">#drifttime histogram</span>
+        <span class="n">hist4</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="c1">#loop over the four chambers</span>
+        <span class="k">for</span> <span class="n">chamber</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]:</span>
+            <span class="c1">#create an empty dictionary for each type of histogram corresponding to the selected chamber</span>
+            <span class="n">hist1</span><span class="p">[</span><span class="n">chamber</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">hist2</span><span class="p">[</span><span class="n">chamber</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">hist3</span><span class="p">[</span><span class="n">chamber</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">hist4</span><span class="p">[</span><span class="n">chamber</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="c1">#TDC_channel simple histogram - adaptive binning depending on the corresponding channels</span>
+            <span class="n">bins</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">batch_dfs</span><span class="p">[</span><span class="n">chamber</span><span class="p">]</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;TDC_CHANNEL&#39;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">TDC_CHANNEL</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">arange</span><span class="p">((</span><span class="n">chamber</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">64</span><span class="p">,(</span><span class="n">chamber</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">64</span><span class="p">,</span><span class="mi">1</span><span class="p">)))</span>
+            <span class="p">)</span>
+            
+            <span class="c1">#count number of orbits per TDC_CHANNEL</span>
+            <span class="n">bins2</span><span class="p">,</span> <span class="n">counts2</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">batch_dfs</span><span class="p">[</span><span class="n">chamber</span><span class="p">]</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;ORBIT_CNT&quot;</span><span class="p">,</span><span class="s2">&quot;TDC_CHANNEL&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+                <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;ORBIT_CNT&#39;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">ORBIT_CNT</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">binning</span><span class="p">)</span>
+            <span class="p">)</span>
+            
+            <span class="c1">#filtering only useful hits (avoid scintillators) and use inner join to consider coincident events</span>
+            <span class="n">batch_dfs</span><span class="p">[</span><span class="n">chamber</span><span class="p">]</span> <span class="o">=</span> <span class="n">batch_dfs</span><span class="p">[</span><span class="n">chamber</span><span class="p">]</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">batch_df_scint</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;ORBIT_CNT&quot;</span><span class="p">],</span> <span class="s2">&quot;inner&quot;</span><span class="p">)</span>
+            <span class="c1">#creating driftime and select only positive values</span>
+            <span class="c1">#values smaller than zero should be artifacts - only a few percentage</span>
+            <span class="n">batch_dfs</span><span class="p">[</span><span class="n">chamber</span><span class="p">]</span> <span class="o">=</span> <span class="n">batch_dfs</span><span class="p">[</span><span class="n">chamber</span><span class="p">]</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">&#39;DRIFTIME&#39;</span><span class="p">,</span> 
+                                                               <span class="mi">25</span><span class="o">*</span><span class="p">((</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;BX_COUNTER&#39;</span><span class="p">)</span><span class="o">-</span>\
+                                                                    <span class="n">col</span><span class="p">(</span><span class="s1">&#39;BX_COUNTER_SCINT&#39;</span><span class="p">))</span><span class="o">+</span>\
+                                                                   <span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;TDC_MEAS&#39;</span><span class="p">)</span><span class="o">-</span>\
+                                                                    <span class="n">col</span><span class="p">(</span><span class="s1">&#39;TDC_MEAS_SCINT&#39;</span><span class="p">))</span><span class="o">/</span><span class="mi">30</span><span class="p">)</span><span class="o">+</span>\
+                                                               <span class="n">time_offset_by_chamber</span><span class="p">[</span><span class="n">chamber</span><span class="p">])</span>\
+                                                   <span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;DRIFTIME&#39;</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> 
+            
+            <span class="c1">#TDC_CHANNEL histogram after scintillator selection</span>
+            <span class="n">bins3</span><span class="p">,</span> <span class="n">counts3</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">batch_dfs</span><span class="p">[</span><span class="n">chamber</span><span class="p">]</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;TDC_CHANNEL&#39;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">TDC_CHANNEL</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">arange</span><span class="p">((</span><span class="n">chamber</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="mi">64</span><span class="p">,(</span><span class="n">chamber</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">64</span><span class="p">,</span><span class="mi">1</span><span class="p">)))</span>
+            <span class="p">)</span>
+
+            <span class="c1">#histogram for drifttime - a &quot;box&quot; is expected</span>
+            <span class="n">bins4</span><span class="p">,</span> <span class="n">counts4</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">batch_dfs</span><span class="p">[</span><span class="n">chamber</span><span class="p">]</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;DRIFTIME&#39;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">rdd</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">DRIFTIME</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">binning_drift</span><span class="p">)</span>
+            <span class="p">)</span>
+            
+            <span class="c1">#convert to python integers both bins and counts</span>
+            <span class="n">hist1</span><span class="p">[</span><span class="n">chamber</span><span class="p">][</span><span class="s1">&#39;bins&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="n">bins</span><span class="p">))</span> 
+            <span class="n">hist1</span><span class="p">[</span><span class="n">chamber</span><span class="p">][</span><span class="s1">&#39;counts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="n">counts</span><span class="p">))</span>
+
+            <span class="n">hist2</span><span class="p">[</span><span class="n">chamber</span><span class="p">][</span><span class="s1">&#39;bins&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="n">bins2</span><span class="p">))</span>
+            <span class="n">hist2</span><span class="p">[</span><span class="n">chamber</span><span class="p">][</span><span class="s1">&#39;counts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="n">counts2</span><span class="p">))</span>
+
+            <span class="n">hist3</span><span class="p">[</span><span class="n">chamber</span><span class="p">][</span><span class="s1">&#39;bins&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="n">bins3</span><span class="p">))</span>
+            <span class="n">hist3</span><span class="p">[</span><span class="n">chamber</span><span class="p">][</span><span class="s1">&#39;counts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="n">counts3</span><span class="p">))</span>
+
+            <span class="n">hist4</span><span class="p">[</span><span class="n">chamber</span><span class="p">][</span><span class="s1">&#39;bins&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="n">bins4</span><span class="p">))</span>
+            <span class="n">hist4</span><span class="p">[</span><span class="n">chamber</span><span class="p">][</span><span class="s1">&#39;counts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="n">counts4</span><span class="p">))</span>
+
+        <span class="c1">#producing the results dictionary</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;hits&quot;</span> <span class="p">:</span> <span class="n">hits</span><span class="p">,</span>
+            <span class="s2">&quot;hits_per_chamber&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">hits_ch0</span><span class="p">,</span> <span class="n">hits_ch1</span><span class="p">,</span> <span class="n">hits_ch2</span><span class="p">,</span> <span class="n">hits_ch3</span><span class="p">],</span>
+            <span class="s2">&quot;hist_1&quot;</span><span class="p">:</span> <span class="n">hist1</span><span class="p">,</span>
+            <span class="s2">&quot;hist_2&quot;</span><span class="p">:</span> <span class="n">hist2</span><span class="p">,</span>
+            <span class="s2">&quot;hist_3&quot;</span><span class="p">:</span> <span class="n">hist3</span><span class="p">,</span>
+            <span class="s2">&quot;hist_4&quot;</span><span class="p">:</span> <span class="n">hist4</span>
+        <span class="p">}</span>
+
+        <span class="c1">#sending the json to the producer</span>
+        <span class="n">producer</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s1">&#39;topic_results&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+
+        <span class="c1">#unpersist DataFrames and free resources</span>
+        <span class="n">batch_df</span><span class="o">.</span><span class="n">unpersist</span><span class="p">()</span>
+        <span class="n">batch_df_ch0</span><span class="o">.</span><span class="n">unpersist</span><span class="p">()</span>
+        <span class="n">batch_df_ch1</span><span class="o">.</span><span class="n">unpersist</span><span class="p">()</span>
+        <span class="n">batch_df_ch2</span><span class="o">.</span><span class="n">unpersist</span><span class="p">()</span>
+        <span class="n">batch_df_ch3</span><span class="o">.</span><span class="n">unpersist</span><span class="p">()</span> 
+        
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="k">pass</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p><br><br>
@@ -14503,18 +14840,211 @@ spark.executor.cores               1</code></pre>
 <br><br></p>
 
 </div>
-</div></section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+</div></div></section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#producer definition from IP address given before</span>
+<span class="n">producer</span> <span class="o">=</span> <span class="n">KafkaProducer</span><span class="p">(</span><span class="n">bootstrap_servers</span><span class="o">=</span><span class="n">KAFKA_BOOTSTRAP_SERVERS</span><span class="p">)</span>
+
+<span class="c1">#process each batch as a WriteStream - 5 seconds batch - rate 1kHz </span>
+<span class="n">df</span><span class="o">.</span><span class="n">writeStream</span>\
+    <span class="o">.</span><span class="n">foreachBatch</span><span class="p">(</span><span class="n">batch_proc</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">trigger</span><span class="p">(</span><span class="n">processingTime</span><span class="o">=</span><span class="s1">&#39;5 second&#39;</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">start</span><span class="p">()</span>\
+    <span class="o">.</span><span class="n">awaitTermination</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
 
 </div></section></section><section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h1 id="Dashboard">Dashboard<a class="anchor-link" href="#Dashboard">&#182;</a></h1>
 </div>
-</div></section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+</div></section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#define the kafka server from IP and Port</span>
+<span class="n">KAFKA_BOOTSTRAP_SERVERS</span><span class="o">=</span><span class="s1">&#39;slave04:9092&#39;</span>
 
-</div></section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+<span class="c1">#consumer definition from IP address given before</span>
+<span class="n">consumer</span> <span class="o">=</span> <span class="n">KafkaConsumer</span><span class="p">(</span><span class="n">bootstrap_servers</span><span class="o">=</span><span class="n">KAFKA_BOOTSTRAP_SERVERS</span><span class="p">,</span> <span class="n">consumer_timeout_ms</span><span class="o">=</span><span class="mi">100000</span><span class="p">)</span>
 
+<span class="c1">#consumer subscription to topic_results</span>
+<span class="n">consumer</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s1">&#39;topic_results&#39;</span><span class="p">)</span>
+
+<span class="c1">#Additional configuration options for consumer</span>
+<span class="n">consumer</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="n">timeout_ms</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>         <span class="c1"># do not enable dead-times before one poll to the next</span>
+              <span class="n">max_records</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>     <span class="c1"># do not limit the number of records to consume at once </span>
+              <span class="n">update_offsets</span><span class="o">=</span><span class="kc">True</span>   <span class="c1"># update the reading offsets on this topic</span>
+             <span class="p">)</span>
+</pre></div>
+
+     </div>
 </div>
+</div>
+</div>
+
+</div></section><section><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">rt_plot</span><span class="p">(</span><span class="n">js</span><span class="p">,</span><span class="n">num</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span><span class="n">axes</span><span class="p">):</span>
+    
+    <span class="c1">#to delete the texts written during the previous update</span>
+    <span class="k">for</span> <span class="n">txt</span> <span class="ow">in</span> <span class="n">fig</span><span class="o">.</span><span class="n">texts</span><span class="p">:</span>
+        <span class="n">txt</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    
+    <span class="c1">#label with informations on the right side of the window</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figtext</span><span class="p">(</span><span class="mf">1.01</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;Batch N° </span><span class="si">{</span><span class="n">num</span><span class="si">}</span><span class="s1">:</span><span class="se">\n\n</span><span class="s1">Hits: </span><span class="si">{</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hits&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> </span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span>\
+                <span class="sa">f</span><span class="s1">&#39;Channel 0: </span><span class="si">{</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hits_per_chamber&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> hits</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span>\
+                <span class="sa">f</span><span class="s1">&#39;Channel 1: </span><span class="si">{</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hits_per_chamber&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> hits</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span>\
+                <span class="sa">f</span><span class="s1">&#39;Channel 2: </span><span class="si">{</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hits_per_chamber&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s1"> hits</span><span class="se">\n\n</span><span class="s1">&#39;</span> <span class="o">+</span>\
+                <span class="sa">f</span><span class="s1">&#39;Channel 3: </span><span class="si">{</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hits_per_chamber&quot;</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s1"> hits&#39;</span> 
+                <span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> 
+                <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;snow&#39;</span><span class="p">,</span>
+                          <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+                          <span class="n">boxstyle</span><span class="o">=</span><span class="s1">&#39;round&#39;</span><span class="p">))</span>
+    
+    <span class="c1">#main title of the upper panel</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figtext</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.07</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;Muon-Hits Monitors&#39;</span><span class="p">,</span>
+                <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figtext</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.025</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;Total active channels&#39;</span><span class="p">,</span>
+                <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">22</span><span class="p">)</span>
+                
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="c1">#clean previous plots and update titles and labels</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Chamber </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Channel N°&quot;</span><span class="p">,</span>  <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Counts&quot;</span><span class="p">,</span>  <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="c1">#bins centers computation</span>
+        <span class="n">bin_centers</span> <span class="o">=</span> <span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_1&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;bins&quot;</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>\
+                <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_1&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;bins&quot;</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bin_centers</span><span class="p">,</span>
+                <span class="n">weights</span><span class="o">=</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_1&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;counts&quot;</span><span class="p">],</span>
+                <span class="n">bins</span><span class="o">=</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_1&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;bins&quot;</span><span class="p">],</span>
+                <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+
+    
+    <span class="c1">#main title of the second panel</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figtext</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span>
+                <span class="s1">&#39;Total number of active channels per orbit&#39;</span><span class="p">,</span>
+                <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">22</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="c1">#clean previous plots and update titles and labels</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Chamber </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Orbit N°&quot;</span><span class="p">,</span>    <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Counts&quot;</span><span class="p">,</span>  <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="c1">#bins centers computation</span>
+        <span class="n">bin_centers</span> <span class="o">=</span> <span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_2&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;bins&quot;</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>\
+                    <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_2&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;bins&quot;</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bin_centers</span><span class="p">,</span>
+                <span class="n">weights</span><span class="o">=</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_2&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;counts&quot;</span><span class="p">],</span>
+                <span class="n">bins</span><span class="o">=</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_2&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;bins&quot;</span><span class="p">],</span>
+                <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+        <span class="c1">#scientific notation on the x-axis labels</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;sci&quot;</span><span class="p">,</span> <span class="n">scilimits</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span> 
+        
+    <span class="c1">#main title of the third panel</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figtext</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;Total active channels for orbits with active scintillator&#39;</span><span class="p">,</span>
+                <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">22</span><span class="p">)</span>
+                
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+        <span class="c1">#clean previous plots and update titles and labels</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Chamber </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Channel N°&quot;</span><span class="p">,</span>  <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Counts&quot;</span><span class="p">,</span>  <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="c1">#bins centers computation</span>
+        <span class="n">bin_centers</span> <span class="o">=</span> <span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_3&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;bins&quot;</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>\
+                    <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_3&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;bins&quot;</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bin_centers</span><span class="p">,</span>
+                <span class="n">weights</span><span class="o">=</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_3&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;counts&quot;</span><span class="p">],</span>
+                <span class="n">bins</span><span class="o">=</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_3&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;bins&quot;</span><span class="p">],</span>
+                <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+
+    
+    <span class="c1">#main title of the lower panel</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figtext</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.24</span><span class="p">,</span>
+                <span class="s1">&#39;Drift time&#39;</span><span class="p">,</span>
+                <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span> <span class="o">=</span> <span class="mi">22</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+        <span class="c1">#clean previous plots and update titles and labels</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Chamber </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time[s]&quot;</span><span class="p">,</span>     <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Counts&quot;</span><span class="p">,</span>  <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+        <span class="c1">#bins centers computation</span>
+        <span class="n">bin_centers</span> <span class="o">=</span> <span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_4&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;bins&quot;</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>\
+                    <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_4&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;bins&quot;</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">bin_centers</span><span class="p">,</span>
+                <span class="n">weights</span><span class="o">=</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_4&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;counts&quot;</span><span class="p">],</span>
+                <span class="n">bins</span><span class="o">=</span><span class="n">js</span><span class="p">[</span><span class="s2">&quot;hist_4&quot;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][</span><span class="s2">&quot;bins&quot;</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+        <span class="c1">#scientific notation on the x-axis labels</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;sci&quot;</span><span class="p">,</span> <span class="n">scilimits</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span> 
+     
+    <span class="c1">#to separate better the plots</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">h_pad</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span> <span class="n">w_pad</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1">#clean the whole screen and update with new incoming data</span>
+    <span class="n">display</span><span class="o">.</span><span class="n">clear_output</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">display</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">gcf</span><span class="p">())</span>
+
+<span class="k">def</span> <span class="nf">bin_sum</span><span class="p">(</span><span class="n">old_j</span><span class="p">,</span><span class="n">new_j</span><span class="p">):</span>
+    <span class="c1">#updating old values </span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s2">&quot;hits&quot;</span><span class="p">,</span>
+                             <span class="s2">&quot;hits_per_chamber&quot;</span><span class="p">,</span>
+                             <span class="s2">&quot;hist_1&quot;</span><span class="p">,</span>
+                             <span class="s2">&quot;hist_2&quot;</span><span class="p">,</span>
+                             <span class="s2">&quot;hist_3&quot;</span><span class="p">,</span>
+                             <span class="s2">&quot;hist_4&quot;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="c1">#to add new hits</span>
+                <span class="n">old_j</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">+=</span><span class="n">new_j</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">i</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                <span class="c1">#to add new hits per chamber</span>
+                <span class="n">old_j</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">old_j</span><span class="p">[</span><span class="n">name</span><span class="p">])</span> <span class="o">+</span>\
+                <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">new_j</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+                    <span class="c1">#to update counts with the incoming data array</span>
+                    <span class="n">old_j</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)][</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">old_j</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)][</span><span class="s2">&quot;counts&quot;</span><span class="p">])</span> <span class="o">+</span>\
+                                                  <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">new_j</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)][</span><span class="s2">&quot;counts&quot;</span><span class="p">])</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p><br><br>
@@ -14522,20 +15052,42 @@ spark.executor.cores               1</code></pre>
 <br><br></p>
 
 </div>
-</div></section><section>
+</div></div></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="Cumulative-dashboard-service">Cumulative dashboard service<a class="anchor-link" href="#Cumulative-dashboard-service">&#182;</a></h2>
 </div>
-</div><div class="fragment"><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+</div><div class="fragment"><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Figure creation</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="n">sharey</span> <span class="o">=</span> <span class="s1">&#39;row&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">num</span><span class="p">,</span><span class="n">message</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">consumer</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">num</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="c1">#The first incoming message is simply stored</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="c1">#The messages following are obtained as an update of the first one</span>
+        <span class="n">bin_sum</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+    <span class="c1">#plot production</span>
+    <span class="n">rt_plot</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span><span class="n">num</span><span class="p">,</span><span class="n">fig</span><span class="p">,</span><span class="n">axes</span><span class="p">)</span>
+</pre></div>
 
+     </div>
 </div>
+</div>
+</div>
+
+</div></div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p><img src="Pictures/graphs.png" alt="drawing" width="800"/></p>
 
 </div>
-</div>
+</div></div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p><br><br>
@@ -14548,15 +15100,32 @@ spark.executor.cores               1</code></pre>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h2 id="&#160;Single-batch-analysis">&#160;Single batch analysis<a class="anchor-link" href="#&#160;Single-batch-analysis">&#182;</a></h2>
 </div>
-</div><div class="fragment"><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs jp-mod-noInput ">
+</div><div class="fragment"><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Figure creation</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span> <span class="n">sharey</span> <span class="o">=</span> <span class="s1">&#39;row&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">num</span><span class="p">,</span><span class="n">message</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">consumer</span><span class="p">):</span>
+    <span class="c1">#Creating and plotting values for the received message</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+    <span class="n">rt_plot</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span><span class="n">num</span><span class="p">,</span><span class="n">fig</span><span class="p">,</span><span class="n">axes</span><span class="p">)</span>
+</pre></div>
 
+     </div>
 </div>
+</div>
+</div>
+
+</div></div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p><img src="Pictures/graph2.png" alt="drawing" width="800"/></p>
 
 </div>
-</div>
+</div></div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p><br><br>
@@ -14579,7 +15148,7 @@ spark.executor.cores               1</code></pre>
 <p>The input rate seems to be stabilized around the expected rate (~1000 rows/s), as also the input rows. The high process rate also allow to compute the incoming batch in the required time.</p>
 
 </div>
-</div>
+</div></div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p><br><br>
@@ -14595,17 +15164,6 @@ spark.executor.cores               1</code></pre>
 </div></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<ul>
-<li>Resources' Scaling</li>
-<li>Number of repartitions - .coalesce()</li>
-<li>Shuffle partition setting</li>
-<li>Input rate</li>
-</ul>
-
-</div>
-</div></section><section>
-<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h3 id="Horizontal-scaling">Horizontal scaling<a class="anchor-link" href="#Horizontal-scaling">&#182;</a></h3><p>The following times are taken when the batch duration time stabilizes (approximately, at sight) for a $1$ kHz input rate:</p>
 <ul>
 <li>5 workers - 15 executors: Batch duration ~3.3 s.</li>
@@ -14616,7 +15174,29 @@ spark.executor.cores               1</code></pre>
 <p>By scaling horizontally the cluster, is not possible to appreciate consistent differencies in the processing time. This is due to the fact that for a small number of data we do not have an advantage in using distributed calculus. With larger input rates we could have a better understanding of horizontal scaling and this phenomenon.</p>
 
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell  jp-mod-noInput ">
+</div><div class="fragment"><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">executors</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">15</span><span class="p">]</span>
+<span class="n">durations</span> <span class="o">=</span> <span class="p">[</span><span class="mf">4.6</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">,</span> <span class="mf">4.1</span><span class="p">,</span> <span class="mf">3.8</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">executors</span><span class="p">,</span> <span class="n">durations</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Duration [s]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Executors&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Horizontal scaling&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
 
 <div class="jp-Cell-outputWrapper">
 
@@ -14643,7 +15223,7 @@ spark.executor.cores               1</code></pre>
 
 </div>
 
-</div>
+</div></div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p><br><br>
@@ -14651,7 +15231,7 @@ spark.executor.cores               1</code></pre>
 <br><br></p>
 
 </div>
-</div></section><section>
+</div></div></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h3 id="Coalesce-(Repatition)">Coalesce (Repatition)<a class="anchor-link" href="#Coalesce-(Repatition)">&#182;</a></h3><p><code>batch_df.coalesce(15)</code></p>
@@ -14687,13 +15267,13 @@ spark.executor.cores               1</code></pre>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <h1 id="Conclusions">Conclusions<a class="anchor-link" href="#Conclusions">&#182;</a></h1>
 </div>
-</div>
+</div><div class="fragment">
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>In the end, we have been able to develop a working Structured Streaming application where a DAQ is sending nearly 1000 samples per second to the Spark Master. This project allowed us to work with Big Data processing architectures for the first times, solve the problems related to Apache Kafka and Spark usage and spend quite some time in the tuning of the architecture.</p>
 
 </div>
-</div></section></section>
+</div></div></section></section>
 </div>
 </div>
 </body>
