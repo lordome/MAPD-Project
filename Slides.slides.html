@@ -14393,6 +14393,20 @@ div.jp-OutputPrompt {
 </ul>
 
 </div>
+</div></section><section>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<h2 id="Outline">Outline<a class="anchor-link" href="#Outline">&#182;</a></h2><ul>
+<li>Spark cluster architecture</li>
+<li>Kafka server setup</li>
+<li>Producer</li>
+<li>Computation</li>
+<li>Dashboard</li>
+<li>Benchmarking</li>
+<li>Live test</li>
+</ul>
+
+</div>
 </div></section></section><section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
@@ -14465,7 +14479,9 @@ spark.executor.cores               1</code></pre>
 </div></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The two Kafka topics <em>topic_stream</em> and <em>topic_results</em> are created with a <strong>single</strong> partition. For <em>topic_results</em>, this choice reflects the necessity of having a single stream of results to implement the dashboard, while for <em>topic_stream</em> allows for each executor to stream in parallel the incoming data. We have also tried to increase this number (<code>num_partitions=2</code> and <code>num_partitions=4</code>) without having any improvement in the final batch processing rate.</p>
+<p>The Kafka server will be fired up with the script in the next slide.</p>
+<p>The two Kafka topics <em>topic_stream</em> and <em>topic_results</em> are created with a <strong>single</strong> partition.</p>
+<p>We have also tried to increase this number (<code>num_partitions=2</code> and <code>num_partitions=4</code>) without having any improvement in the final batch processing rate.</p>
 
 </div>
 </div></section><section>
